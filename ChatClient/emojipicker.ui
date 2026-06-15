@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EmojiPicker</class>
+ <widget class="QWidget" name="EmojiPicker">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>240</width><height>230</height></rect>
+  </property>
+  <property name="windowTitle"><string>表情</string></property>
+  <property name="styleSheet">
+   <string>EmojiPicker { background:white; border:1px solid #ccc; border-radius:4px; }</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="spacing"><number>2</number></property>
+   <property name="leftMargin"><number>4</number></property>
+   <property name="topMargin"><number>4</number></property>
+   <property name="rightMargin"><number>4</number></property>
+   <property name="bottomMargin"><number>4</number></property>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

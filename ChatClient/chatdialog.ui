@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ChatDialog</class>
+ <widget class="QDialog" name="ChatDialog">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>520</width><height>560</height></rect>
+  </property>
+  <property name="windowTitle"><string>聊天窗口</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="text"><string>在线</string></property>
+     <property name="styleSheet"><string>color:green; font-size:11px; padding:2px;</string></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextBrowser" name="chatView">
+     <property name="openExternalLinks"><bool>true</bool></property>
+     <property name="styleSheet">
+      <string>QTextBrowser { background:#f0f0f0; border:1px solid #ccc; border-radius:4px; padding:8px; font-size:13px; }</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="toolRow">
+     <item><widget class="QPushButton" name="emojiBtn"><property name="text"><string>😊 表情</string></property><property name="fixedWidth"><number>80</number></property></widget></item>
+     <item><widget class="QPushButton" name="exportBtn"><property name="text"><string>导出记录</string></property><property name="fixedWidth"><number>80</number></property></widget></item>
+     <item><spacer name="toolSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="sendRow">
+     <item>
+      <widget class="QTextEdit" name="inputEdit">
+       <property name="fixedHeight"><number>70</number></property>
+       <property name="placeholderText"><string>输入消息... (Enter发送, Ctrl+Enter换行)</string></property>
+       <property name="styleSheet">
+        <string>QTextEdit { border:1px solid #ccc; border-radius:4px; padding:4px; font-size:13px; }</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="sendBtn">
+       <property name="fixedSize"><size><width>70</width><height>70</height></size></property>
+       <property name="text"><string>发送</string></property>
+       <property name="styleSheet">
+        <string>QPushButton { background:#4caf50; color:white; border-radius:4px; font-size:14px; font-weight:bold; }
+         QPushButton:hover { background:#45a049; }</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

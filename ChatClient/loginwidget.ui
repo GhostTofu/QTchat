@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoginWidget</class>
+ <widget class="QWidget" name="LoginWidget">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>400</width><height>480</height></rect>
+  </property>
+  <property name="windowTitle"><string>登录 - 即时通讯系统</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing"><number>8</number></property>
+   <property name="leftMargin"><number>20</number></property>
+   <property name="topMargin"><number>12</number></property>
+   <property name="rightMargin"><number>20</number></property>
+   <property name="bottomMargin"><number>12</number></property>
+
+   <!-- 标题 -->
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text"><string>即时通讯系统</string></property>
+     <property name="alignment"><set>Qt::AlignCenter</set></property>
+     <property name="styleSheet"><string>font-size:22px; font-weight:bold;</string></property>
+    </widget>
+   </item>
+
+   <!-- 头像 (居中) -->
+   <item alignment="Qt::AlignHCenter">
+    <widget class="QLabel" name="avatarLabel">
+     <property name="minimumSize"><size><width>80</width><height>80</height></size></property>
+     <property name="maximumSize"><size><width>80</width><height>80</height></size></property>
+     <property name="text"><string>头像</string></property>
+     <property name="alignment"><set>Qt::AlignCenter</set></property>
+     <property name="styleSheet"><string>QLabel { border:2px dashed #aaa; border-radius:40px; background:#e0e0e0; }</string></property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QPushButton" name="avatarBtn">
+     <property name="text"><string>选择头像</string></property>
+    </widget>
+   </item>
+
+   <!-- 表单区域: GridLayout 替代 QFormLayout -->
+   <item>
+    <layout class="QGridLayout" name="formGrid">
+     <property name="verticalSpacing"><number>6</number></property>
+     <property name="horizontalSpacing"><number>6</number></property>
+
+     <!-- row 0: 账号 -->
+     <item row="0" column="0">
+      <widget class="QLabel" name="accountLabel">
+       <property name="text"><string>账号:</string></property>
+       <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="accountEdit">
+       <property name="placeholderText"><string>请输入账号</string></property>
+      </widget>
+     </item>
+
+     <!-- row 1: 昵称 -->
+     <item row="1" column="0">
+      <widget class="QLabel" name="nicknameLabel">
+       <property name="text"><string>昵称:</string></property>
+       <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="nicknameEdit">
+       <property name="placeholderText"><string>请输入昵称</string></property>
+      </widget>
+     </item>
+
+     <!-- row 2: 密码 -->
+     <item row="2" column="0">
+      <widget class="QLabel" name="passwordLabel">
+       <property name="text"><string>密码:</string></property>
+       <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="pwdLayout">
+       <property name="spacing"><number>4</number></property>
+       <item>
+        <widget class="QLineEdit" name="passwordEdit">
+         <property name="placeholderText"><string>请输入密码</string></property>
+         <property name="echoMode"><enum>QLineEdit::Password</enum></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="togglePwdBtn">
+         <property name="text"><string>显示</string></property>
+         <property name="checkable"><bool>true</bool></property>
+         <property name="minimumSize"><size><width>50</width><height>0</height></size></property>
+         <property name="maximumSize"><size><width>50</width><height>16777215</height></size></property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+
+     <!-- row 3: 性别 -->
+     <item row="3" column="0">
+      <widget class="QLabel" name="genderLabel">
+       <property name="text"><string>性别:</string></property>
+       <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <layout class="QHBoxLayout" name="genderLayout">
+       <property name="spacing"><number>12</number></property>
+       <item>
+        <widget class="QRadioButton" name="maleRadio">
+         <property name="text"><string>男</string></property>
+         <property name="checked"><bool>true</bool></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="femaleRadio">
+         <property name="text"><string>女</string></property>
+        </widget>
+       </item>
+       <item><spacer name="genderSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+
+   <!-- 登录/注册按钮 -->
+   <item>
+    <layout class="QHBoxLayout" name="btnLayout">
+     <property name="spacing"><number>16</number></property>
+     <item><spacer name="btnLeftSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+     <item>
+      <widget class="QPushButton" name="loginBtn">
+       <property name="text"><string>登录</string></property>
+       <property name="minimumSize"><size><width>100</width><height>36</height></size></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="registerBtn">
+       <property name="text"><string>注册</string></property>
+       <property name="minimumSize"><size><width>100</width><height>36</height></size></property>
+      </widget>
+     </item>
+     <item><spacer name="btnRightSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+    </layout>
+   </item>
+
+   <!-- 解锁按钮 -->
+   <item>
+    <layout class="QHBoxLayout" name="unlockLayout">
+     <item><spacer name="unlockSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+     <item>
+      <widget class="QPushButton" name="unlockBtn">
+       <property name="text"><string>解锁</string></property>
+       <property name="styleSheet"><string>padding:6px 15px; background:#ff9800; color:white; border-radius:4px;</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+   <!-- 状态提示 -->
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="text"><string/>
+     </property>
+     <property name="alignment"><set>Qt::AlignCenter</set></property>
+     <property name="styleSheet"><string>color:red; font-size:12px;</string></property>
+    </widget>
+   </item>
+
+   <!-- 服务器提示 -->
+   <item>
+    <widget class="QLabel" name="serverHint">
+     <property name="text"><string>请确保服务端已启动 (默认端口8888)</string></property>
+     <property name="alignment"><set>Qt::AlignCenter</set></property>
+     <property name="styleSheet"><string>color:#888; font-size:11px;</string></property>
+    </widget>
+   </item>
+
+   <item><spacer name="bottomSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint"><size><width>20</width><height>10</height></size></property></spacer></item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
