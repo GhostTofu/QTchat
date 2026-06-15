@@ -1,4 +1,4 @@
-#ifndef LOGINWIDGET_H
+﻿#ifndef LOGINWIDGET_H
 #define LOGINWIDGET_H
 
 #include <QWidget>
@@ -28,11 +28,16 @@ private slots:
 
     void onLoginResult(bool success, const QString &reason, const UserInfo &userInfo);
     void onRegisterResult(bool success, const QString &reason);
+    void onConnected();
 
 private:
     void setInputsEnabled(bool enabled);
     void resetLockState();
     void updateMode(bool registerMode);
+    void doSendLogin();
+    void doSendRegister();
+
+    enum PendingAction { ActionNone, ActionLogin, ActionRegister };
 
     Ui::LoginWidget *ui;
     QButtonGroup *m_genderGroup;
@@ -41,6 +46,13 @@ private:
     int m_failCount;
     bool m_locked;
     bool m_registerMode;
+
+    // 等待连接后执行的待处理操作
+    PendingAction m_pendingAction;
+    QString m_pendingAccount;
+    QString m_pendingPassword;
+    QString m_pendingNickname;
+    QString m_pendingGender;
 };
 
 #endif // LOGINWIDGET_H

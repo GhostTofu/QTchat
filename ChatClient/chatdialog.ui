@@ -23,8 +23,8 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="toolRow">
-     <item><widget class="QPushButton" name="emojiBtn"><property name="text"><string>😊 表情</string></property><property name="fixedWidth"><number>80</number></property></widget></item>
-     <item><widget class="QPushButton" name="exportBtn"><property name="text"><string>导出记录</string></property><property name="fixedWidth"><number>80</number></property></widget></item>
+     <item><widget class="QPushButton" name="emojiBtn"><property name="text"><string>😊 表情</string></property><property name="minimumSize"><size><width>90</width><height>30</height></size></property></widget></item>
+     <item><widget class="QPushButton" name="exportBtn"><property name="text"><string>导出记录</string></property><property name="minimumSize"><size><width>90</width><height>30</height></size></property></widget></item>
      <item><spacer name="toolSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
     </layout>
    </item>

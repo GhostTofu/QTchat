@@ -16,10 +16,10 @@ int main(int argc, char *argv[])
     // 设置全局样式
     app.setStyleSheet(
         "QWidget { font-family: 'Microsoft YaHei', 'SimHei', sans-serif; }"
-        "QPushButton { padding: 6px 16px; border: 1px solid #ccc; "
+        "QPushButton { padding: 4px 10px; border: 1px solid #ccc; "
         "border-radius: 4px; background: #f5f5f5; }"
         "QPushButton:hover { background: #e0e0e0; }"
-        "QLineEdit { padding: 6px; border: 1px solid #ccc; border-radius: 4px; }"
+        "QLineEdit { padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; }"
         "QLineEdit:focus { border-color: #2196f3; }"
     );
 

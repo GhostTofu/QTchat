@@ -91,8 +91,8 @@
         <widget class="QPushButton" name="togglePwdBtn">
          <property name="text"><string>显示</string></property>
          <property name="checkable"><bool>true</bool></property>
-         <property name="minimumSize"><size><width>50</width><height>0</height></size></property>
-         <property name="maximumSize"><size><width>50</width><height>16777215</height></size></property>
+         <property name="minimumSize"><size><width>60</width><height>0</height></size></property>
+         <property name="maximumSize"><size><width>60</width><height>16777215</height></size></property>
         </widget>
        </item>
       </layout>

@@ -29,27 +29,12 @@ static QString avatarFileToDataUrl(const QString &filePath)
 LoginWidget::LoginWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::LoginWidget),
       m_currentAvatar("default"), m_failCount(0), m_locked(false),
-      m_registerMode(false)
+      m_registerMode(false), m_pendingAction(ActionNone)
 {
     ui->setupUi(this);
 
     // 初始状态：解锁按钮隐藏
     ui->unlockBtn->setVisible(false);
-    ui->titleLabel->setText("即时通讯系统");
-    ui->accountLabel->setText("账号:");
-    ui->nicknameLabel->setText("昵称:");
-    ui->passwordLabel->setText("密码:");
-    ui->genderLabel->setText("性别:");
-    ui->maleRadio->setText("男");
-    ui->femaleRadio->setText("女");
-    ui->togglePwdBtn->setText("显示");
-    ui->avatarBtn->setText("选择头像");
-    ui->avatarLabel->setText("头像");
-    ui->unlockBtn->setText("解锁");
-    ui->serverHint->setText("请确保服务端已启动 (默认端口8888)");
-    ui->accountEdit->setPlaceholderText("请输入账号");
-    ui->nicknameEdit->setPlaceholderText("请输入昵称");
-    ui->passwordEdit->setPlaceholderText("请输入密码");
 
     // 性别按钮分组
     m_genderGroup = new QButtonGroup(this);
@@ -65,6 +50,7 @@ LoginWidget::LoginWidget(QWidget *parent)
 
     // 连接NetworkClient信号
     NetworkClient *net = NetworkClient::instance();
+    connect(net, &NetworkClient::connected, this, &LoginWidget::onConnected);
     connect(net, &NetworkClient::loginResult, this, &LoginWidget::onLoginResult);
     connect(net, &NetworkClient::registerResult, this, &LoginWidget::onRegisterResult);
 
@@ -119,6 +105,40 @@ void LoginWidget::updateMode(bool registerMode)
     setInputsEnabled(!m_locked);
 }
 
+// ==================== 连接成功 → 执行待处理操作 ====================
+
+void LoginWidget::onConnected()
+{
+    switch (m_pendingAction) {
+    case ActionLogin:
+        m_pendingAction = ActionNone;
+        doSendLogin();
+        break;
+    case ActionRegister:
+        m_pendingAction = ActionNone;
+        doSendRegister();
+        break;
+    default:
+        break;
+    }
+}
+
+void LoginWidget::doSendLogin()
+{
+    NetworkClient::instance()->sendLogin(m_pendingAccount, m_pendingPassword);
+}
+
+void LoginWidget::doSendRegister()
+{
+    UserInfo user;
+    user.account = m_pendingAccount;
+    user.nickname = m_pendingNickname;
+    user.gender = m_pendingGender;
+    user.avatar = m_currentAvatar;
+
+    NetworkClient::instance()->sendRegister(user, m_pendingPassword);
+}
+
 // ==================== 槽函数 ====================
 
 void LoginWidget::onLoginClicked()
@@ -136,12 +156,16 @@ void LoginWidget::onLoginClicked()
         return;
     }
 
+    // 保存待发送的凭证
+    m_pendingAccount = account;
+    m_pendingPassword = password;
+
     if (!NetworkClient::instance()->isConnected()) {
+        m_pendingAction = ActionLogin;
         NetworkClient::instance()->connectToServer("127.0.0.1", 8888);
         ui->statusLabel->setText("正在连接服务器...");
-        NetworkClient::instance()->sendLogin(account, password);
     } else {
-        NetworkClient::instance()->sendLogin(account, password);
+        doSendLogin();
     }
 }
 
@@ -161,16 +185,18 @@ void LoginWidget::onRegisterClicked()
         return;
     }
 
-    UserInfo user;
-    user.account = account;
-    user.nickname = nickname;
-    user.gender = ui->maleRadio->isChecked() ? "男" : "女";
-    user.avatar = m_currentAvatar;
-
-    NetworkClient::instance()->sendRegister(user, password);
+    // 保存待发送的凭证
+    m_pendingAccount = account;
+    m_pendingNickname = nickname;
+    m_pendingPassword = password;
+    m_pendingGender = ui->maleRadio->isChecked() ? "男" : "女";
 
     if (!NetworkClient::instance()->isConnected()) {
+        m_pendingAction = ActionRegister;
         NetworkClient::instance()->connectToServer("127.0.0.1", 8888);
+        ui->statusLabel->setText("正在连接服务器...");
+    } else {
+        doSendRegister();
     }
 }
 
