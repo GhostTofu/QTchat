@@ -4,6 +4,8 @@
 #include "chatdialog.h"
 #include "ui_chatdialog.h"
 #include "databasemanager.h"
+#include "baiduspeech.h"
+#include "audiorecorder.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMessageBox>
@@ -14,13 +16,16 @@
 #include <QTextCursor>
 #include <QTextTable>
 #include <QTextTableFormat>
+#include <QCoreApplication>
+#include <QDir>
 #include <QDebug>
 
 ChatDialog::ChatDialog(const QString &myAccount, const QString &friendAccount,
                          const QString &friendNickname, QWidget *parent)
     : QDialog(parent), ui(new Ui::ChatDialog),
       m_myAccount(myAccount), m_friendAccount(friendAccount),
-      m_friendNickname(friendNickname), m_emojiPicker(nullptr)
+      m_friendNickname(friendNickname), m_emojiPicker(nullptr),
+      m_speech(new BaiduSpeech(this)), m_recorder(new AudioRecorder(this))
 {
     ui->setupUi(this);
     setWindowTitle(QString("与 %1 聊天中").arg(friendNickname));
@@ -38,6 +43,40 @@ ChatDialog::ChatDialog(const QString &myAccount, const QString &friendAccount,
     connect(ui->sendBtn, &QPushButton::clicked, this, &ChatDialog::onSendClicked);
     connect(ui->emojiBtn, &QPushButton::clicked, this, &ChatDialog::onEmojiClicked);
     connect(ui->exportBtn, &QPushButton::clicked, this, &ChatDialog::onExportHistory);
+
+    // 语音按钮：按住说话，松开识别
+    connect(ui->voiceBtn, &QPushButton::pressed, this, &ChatDialog::onVoicePressed);
+    connect(ui->voiceBtn, &QPushButton::released, this, &ChatDialog::onVoiceReleased);
+
+    // 百度语音 token 状态反馈
+    connect(m_speech, &BaiduSpeech::tokenReady, this, [this](const QString &) {
+        ui->statusLabel->setStyleSheet("color: green; font-size: 11px; padding: 2px;");
+        ui->statusLabel->setText("在线");
+    });
+    connect(m_speech, &BaiduSpeech::tokenError, this, [this](const QString &err) {
+        ui->statusLabel->setStyleSheet("color: red; font-size: 11px; padding: 2px;");
+        ui->statusLabel->setText("语音Token: " + err);
+    });
+
+    // 百度语音识别结果
+    connect(m_speech, &BaiduSpeech::recognitionResult, this, &ChatDialog::onVoiceReady);
+    connect(m_speech, &BaiduSpeech::recognitionError, this, &ChatDialog::onVoiceError);
+
+    // 获取 token（从工程根目录的 key 文件，尝试多个路径）
+    QString keyPath = QCoreApplication::applicationDirPath() + "/../../key";
+    keyPath = QDir::cleanPath(keyPath);
+    if (!QFile::exists(keyPath)) {
+        keyPath = QCoreApplication::applicationDirPath() + "/../key";
+        keyPath = QDir::cleanPath(keyPath);
+    }
+    if (!QFile::exists(keyPath)) {
+        // 从 debug 目录直接找工程根目录
+        keyPath = QDir::currentPath() + "/key";
+        keyPath = QDir::cleanPath(keyPath);
+    }
+    qDebug() << "[ChatDialog] key file path:" << keyPath << "exists:" << QFile::exists(keyPath);
+    m_speech->requestToken(keyPath);
+
     ui->inputEdit->installEventFilter(this);
 
     // 加载历史记录
@@ -181,6 +220,61 @@ void ChatDialog::onExportHistory()
         QMessageBox::information(this, "导出成功",
                                  QString("聊天记录已导出到:\n%1").arg(filePath));
     }
+}
+
+// ==================== 语音输入 ====================
+
+void ChatDialog::onVoicePressed()
+{
+    if (!m_speech->hasToken()) {
+        ui->statusLabel->setStyleSheet("color: orange; font-size: 11px; padding: 2px;");
+        ui->statusLabel->setText("语音 token 尚未就绪，请稍候...");
+        return;
+    }
+
+    if (m_recorder->startRecord()) {
+        ui->voiceBtn->setText("🎤 录音中...");
+        ui->voiceBtn->setStyleSheet(
+            "QPushButton { background: #f44336; color: white; border-radius: 4px; "
+            "font-size: 12px; font-weight: bold; }");
+        ui->statusLabel->setStyleSheet("color: red; font-size: 11px; padding: 2px;");
+        ui->statusLabel->setText("● 正在录音...");
+    }
+}
+
+void ChatDialog::onVoiceReleased()
+{
+    ui->voiceBtn->setText("🎤 语音");
+    ui->voiceBtn->setStyleSheet("");  // 恢复默认
+    ui->statusLabel->setStyleSheet("color: blue; font-size: 11px; padding: 2px;");
+    ui->statusLabel->setText("正在识别...");
+
+    QString filePath = m_recorder->stopRecord();
+    if (filePath.isEmpty()) return;
+
+    m_speech->recognize(filePath);
+}
+
+void ChatDialog::onVoiceReady(const QString &text)
+{
+    ui->statusLabel->setStyleSheet("color: green; font-size: 11px; padding: 2px;");
+    ui->statusLabel->setText("在线");
+
+    if (text.isEmpty()) {
+        ui->statusLabel->setStyleSheet("color: orange; font-size: 11px; padding: 2px;");
+        ui->statusLabel->setText("未识别到语音内容");
+        return;
+    }
+
+    // 将识别文本填入输入框
+    ui->inputEdit->setPlainText(text);
+    ui->inputEdit->setFocus();
+}
+
+void ChatDialog::onVoiceError(const QString &error)
+{
+    ui->statusLabel->setStyleSheet("color: red; font-size: 11px; padding: 2px;");
+    ui->statusLabel->setText("语音: " + error);
 }
 
 // EventFilter处理Enter发送

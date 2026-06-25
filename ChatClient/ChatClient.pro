@@ -1,4 +1,4 @@
-QT       += core gui network sql widgets
+QT       += core gui network sql widgets multimedia
 
 TARGET    = ChatClient
 TEMPLATE  = app
@@ -15,7 +15,9 @@ SOURCES += main.cpp \
            networkclient.cpp \
            databasemanager.cpp \
            emojipicker.cpp \
-           friendlistwidget.cpp
+           friendlistwidget.cpp \
+           baiduspeech.cpp \
+           audiorecorder.cpp
 
 HEADERS += loginwidget.h \
            mainwidget.h \
@@ -23,7 +25,9 @@ HEADERS += loginwidget.h \
            networkclient.h \
            databasemanager.h \
            emojipicker.h \
-           friendlistwidget.h
+           friendlistwidget.h \
+           baiduspeech.h \
+           audiorecorder.h
 
 FORMS   += loginwidget.ui \
            mainwidget.ui \

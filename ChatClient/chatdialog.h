@@ -5,6 +5,9 @@
 #include <QEvent>
 #include "emojipicker.h"
 
+class BaiduSpeech;
+class AudioRecorder;
+
 namespace Ui {
 class ChatDialog;
 }
@@ -35,6 +38,10 @@ private slots:
     void onEmojiClicked();
     void onExportHistory();
     void onEmojiSelected(const QString &emoji);
+    void onVoicePressed();
+    void onVoiceReleased();
+    void onVoiceReady(const QString &text);
+    void onVoiceError(const QString &error);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -47,6 +54,8 @@ private:
     QString m_friendNickname;
 
     EmojiPicker *m_emojiPicker;
+    BaiduSpeech *m_speech;
+    AudioRecorder *m_recorder;
 };
 
 #endif // CHATDIALOG_H
