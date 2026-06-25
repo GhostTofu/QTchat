@@ -34,6 +34,10 @@ Makefile.*
 # 聊天记录导出文件
 chat_history_*.txt
 
+# 文档和压缩包
+*.docx
+*.zip
+
 # API 密钥文件
 key
 .env
